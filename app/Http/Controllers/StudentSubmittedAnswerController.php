@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exam;
 use App\Answer;
+use App\Course;
 use App\Question;
 use Illuminate\Http\Request;
 use App\StudentSubmittedAnswer;
@@ -127,5 +129,18 @@ class StudentSubmittedAnswerController extends Controller
         return view('final_result')->with([
             'total_marks' => $total_marks
         ]);
+    }
+
+    public function send_req()
+    {
+        $all_course = Course::all();
+        return view('student_panel.send_req', [
+            'all_course' => $all_course
+        ]);
+    }
+
+    public function get_teacher_by_course_id($course_id)
+    {
+        return $exam = Exam::where('xm_course', $course_id)->get();
     }
 }

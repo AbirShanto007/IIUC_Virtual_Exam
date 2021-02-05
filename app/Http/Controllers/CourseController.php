@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Exam;
 use App\Course;
+use App\StudentRequest;
+use Illuminate\Http\Request;
 
 //--- Eluquent ORM ----
 class CourseController extends Controller
@@ -11,16 +13,10 @@ class CourseController extends Controller
 
     public function index()
     {
-        $all_course_list = Course::all(); //Assending
-
-        // $all_course_list = Course::orderBy('id','ASC')->get(); //Assenenending
-        // $all_course_list = Course::orderBy('course_title','DESC')->get(); //Desenending
-
-        // return $all_course_list;
-
-        return view('index', compact('all_course_list'));
-
-        // return view('admin.pages.courses.index',compact('all_course_list'));
+        $req = StudentRequest::where('student_id', auth()->user()->id)->where('status', 1)->get();
+        return view('index', [
+            'req' => $req
+        ]);
     }
 
 
