@@ -28,21 +28,21 @@
 <!-- Navbar End -->
 
 <!-- Create Class Room Start -->
-<section class="mt-5">
+<section class="mt-3">
     <div class="container-fluid">
-        <div class="card-deck justify-content-end">
-            <a href="{{route('teacher.create_subject_exam')}}" type="button" class="btn btn-success float-right"><i class="fas fa-plus"></i> Create Class Room</a>
+        <div class="card-deck justify-content-end mr-2">
+            <a href="{{route('teacher.create_subject_exam')}}" type="button" class="btn btn-success float-right d-inline-block"><i class="fas fa-plus"></i> Create Exam</a>
         </div>
     </div>     
 </section>
 <!-- Create Class Room End -->
 
 <!-- View Class Room Start-->
-<section class="mt-5">
+<section class="mt-2">
     <div class="container-fluid">
         <div class="row">
           @forelse ($exams as $exam)
-          <div class="col-sm-3">
+          <div class="col-md-3 col-sm-12 p-2">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">Course Name :- {{$exam->course->course_title}} </h5>
@@ -71,10 +71,10 @@
                 @endif
                 <br>
                 <br>
-                <a href="{{ route('teacher.see_request',['teacher_id'=>$exam->teacher_id,'course_id'=>$exam->xm_course,'exam_id'=>$exam->id]) }}" class="btn btn-success">Request List</a>
+                <a href="{{ route('teacher.see_request',['teacher_id'=>$exam->teacher_id,'course_id'=>$exam->xm_course,'exam_id'=>$exam->id]) }}" class="btn btn-primary">Request List</a>
               <br>
               <br>
-                <a href="{{ route('teacher.set_exam_question',['exam_id'=>$exam->id]) }}" class="btn btn-primary">Set Question</a>
+                <a href="{{ route('teacher.set_exam_question',['exam_id'=>$exam->id]) }}" class="btn btn-success">Set Question</a>
                 <br>
                 <br>
                 <a href="{{ route('teacher.approved_student_marks',['teacher_id'=>$exam->teacher_id,'course_id'=>$exam->xm_course,'exam_id'=>$exam->id]) }}" class="btn btn-primary">Total Student List and Marks</a>
@@ -99,6 +99,7 @@
 
 <!-- Bootstarap js -->
 <script src="../assets/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 
 </body>
 </html>

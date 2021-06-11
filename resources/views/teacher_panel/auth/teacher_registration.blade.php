@@ -46,7 +46,7 @@
 
   <div class="card">
     <div class="card-body register-card-body">
-      <p class="login-box-msg">Register a new membership</p>
+      {{-- <p class="login-box-msg">Register a new membership</p> --}}
 
       <form action="{{route('teacher.register.store')}}" method="post">
         @csrf
@@ -101,14 +101,14 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-8">
+          {{-- <div class="col-8">
             <div class="icheck-primary">
               <input type="checkbox" id="agreeTerms" name="terms" value="agree">
               <label for="agreeTerms">
                I agree to the <a href="#">terms</a>
               </label>
             </div>
-          </div>
+          </div> --}}
           <!-- /.col -->
           <div class="col-4">
             <button type="submit" class="btn btn-primary btn-block">Register</button>
@@ -116,7 +116,7 @@
           <!-- /.col -->
         </div>
       </form>
-      <a href="{{route('teacher.login')}}" class="text-center">I already have a membership</a>
+      <a href="{{route('teacher.login')}}" class="btn btn-success text-center mt-2">I already have a membership</a>
     </div>
     <!-- /.form-box -->
   </div><!-- /.card -->

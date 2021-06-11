@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Exam;
+use App\User;
 use App\Answer;
 use App\Course;
 use App\Question;
 use Carbon\Carbon;
 use App\StudentRequest;
 use Illuminate\Http\Request;
+use App\StudentSubmittedAnswer;
 use Illuminate\Support\Facades\Auth;
 
 class ExamController extends Controller
@@ -34,12 +36,12 @@ class ExamController extends Controller
     {
         // dd($request->all());
         $exam_data = new Exam();
-        $exam_data->xm_id = $request->exam_id; //Dtaa minig
-        $exam_data->xm_name = $request->exam_name; //CSE-4802
-        $exam_data->xm_start_time = $request->exam_start_time; //CSE-4802
-        $exam_data->xm_end_time = $request->exam_end_time; //CSE-4802
-        $exam_data->xm_status = 1; //CSE-4802
-        $exam_data->xm_course = 1; // 4
+        $exam_data->xm_id = $request->exam_id;
+        $exam_data->xm_name = $request->exam_name;
+        $exam_data->xm_start_time = $request->exam_start_time;
+        $exam_data->xm_end_time = $request->exam_end_time;
+        $exam_data->xm_status = 1;
+        $exam_data->xm_course = 1;
         $exam_data->save();
         dd("done");
         // $exam_data->
@@ -54,6 +56,16 @@ class ExamController extends Controller
             'xm_end_time' => $request->exam_end_time,
         ]);
         $request->session()->flash('success', 'time update!');
+        return redirect()->back();
+    }
+    public function negative_mark_update(Request $request, $exam_id)
+    {
+        Exam::where([
+            'id' => $exam_id
+        ])->update([
+            'negativeMark' => $request->negativeMark,
+        ]);
+        $request->session()->flash('success', 'Negative Mark  update!');
         return redirect()->back();
     }
 
@@ -121,6 +133,64 @@ class ExamController extends Controller
         $exam_row = Exam::where('xm_course', $request->course_id)->where('xm_status', 1)->first();
         return view('exam.show_exam')->with([
             'exam_row' => $exam_row
+        ]);
+    }
+    public function student_submitted_answer(Request $request, $std_id, $course_id, $exam_id)
+    {
+
+        $auth_student = $std_id;
+        $final_array = [];
+        $wrong_final_array = [];
+        $total_marks = 0;
+        $total_exam_marks = 0;
+        $total_wrong_exam_marks = 0;
+        $student_data = User::where('id', $std_id)->first();
+        $all_submitted_list = StudentSubmittedAnswer::where('std_id', $std_id)->where('xm_id', $exam_id)->get();
+        // dd($all_submitted_list);
+        foreach ($all_submitted_list as $key => $each_list) {
+            $all_answer_list = Answer::where('check', $each_list->check_submit)->first();
+            if ($all_answer_list) {
+                if ($all_answer_list->check == $each_list->check_submit) {
+                    array_push($final_array, $all_answer_list->ques_id);
+                } else {
+                }
+            } else {
+                array_push($wrong_final_array, $each_list->q_id);
+            }
+        }
+
+        $all_ques_list = [];
+        $all_question_exam = Question::where('exam_id',  $exam_id)->get();
+        foreach ($all_question_exam as $key => $each_list_ques) {
+            array_push($all_ques_list, $each_list_ques->id);
+        }
+        foreach ($all_ques_list as $key => $value) {
+            $question = Question::where('id', $value)->first();
+            $total_exam_marks = $total_exam_marks + $question->ques_mark;
+        }
+
+
+        foreach ($final_array as $key => $value) {
+            $question = Question::where('id', $value)->first();
+            $total_marks = $total_marks + $question->ques_mark;
+        }
+        foreach ($wrong_final_array as $key => $value) {
+            $question = Question::where('id', $value)->first();
+            $total_wrong_exam_marks = $total_wrong_exam_marks + $question->ques_mark;
+        }
+        $examdata = Exam::where('id',  $exam_id)->first();
+        if ($total_wrong_exam_marks > 0) {
+            if (isset($examdata->negativeMark)) {
+                $total_marks = $total_marks - ($total_wrong_exam_marks * $examdata->negativeMark) / 100;
+            }
+        }
+        $questions = Question::with('options_list')->where('exam_id', $exam_id)->get();
+        // dd($total_wrong_exam_marks);
+        return view('teacher_panel.student_submitted_answer')->with([
+            'total_marks' => $total_marks,
+            'questions' => $questions,
+            'auth_student' => $auth_student,
+            'student_data' => $student_data,
         ]);
     }
 
@@ -203,7 +273,10 @@ class ExamController extends Controller
 
     public function set_exam_question_store(Request $request, $exam_id)
     {
-        // dd($request->all());
+        if (!isset($request->correct_ans)) {
+            $request->session()->flash('error', 'Currect Ans didn"t set');
+            return redirect()->back();
+        }
         $question = $this->set_q_for_exam($request->all(), $exam_id);
         $option = $this->set_op_for_question($request->all(), $question);
         $request->session()->flash('success', 'question successfully set!');
@@ -223,34 +296,40 @@ class ExamController extends Controller
     public function set_op_for_question($request, $question)
     {
         $request = json_decode(json_encode($request));
+        // dd($request);
+        if (isset($request->options)) {
+            $currect_option = null;
+            $optionList = $request->options;
+            foreach ($optionList as $key => $value) {
+                // dd($optionList);
+                if ("option_" . $request->correct_ans == $key) {
+                    $currect_option =  $question->options_list()->create([
+                        'option_name' => $value
+                    ]);
+                } else {
+                    $optioneach =  $question->options_list()->create([
+                        'option_name' => $value
+                    ]);
+                }
+            }
+        }
 
-        $option_one =  $question->options_list()->create([
-            'option_name' => $request->option_1
-        ]);
-        $option_two =  $question->options_list()->create([
-            'option_name' => $request->option_2
-        ]);
-        $option_three =  $question->options_list()->create([
-            'option_name' => $request->option_3
-        ]);
-        $option_four =  $question->options_list()->create([
-            'option_name' => $request->option_4
-        ]);
+        // $option_one =  $question->options_list()->create([
+        //     'option_name' => $request->option_1
+        // ]);
+        // $option_two =  $question->options_list()->create([
+        //     'option_name' => $request->option_2
+        // ]);
+        // $option_three =  $question->options_list()->create([
+        //     'option_name' => $request->option_3
+        // ]);
+        // $option_four =  $question->options_list()->create([
+        //     'option_name' => $request->option_4
+        // ]);
 
 
-        if (isset($request->correct_ans)) {
-            if ($request->correct_ans == 1) {
-                return  $answer =  $this->set_currect_answer($question->id, $option_one->id);
-            }
-            if ($request->correct_ans == 2) {
-                return  $answer =  $this->set_currect_answer($question->id, $option_two->id);
-            }
-            if ($request->correct_ans == 3) {
-                return $answer =  $this->set_currect_answer($question->id, $option_three->id);
-            }
-            if ($request->correct_ans == 4) {
-                return  $answer =  $this->set_currect_answer($question->id, $option_four->id);
-            }
+        if (isset($request->correct_ans) && isset($currect_option)) {
+            return  $answer =  $this->set_currect_answer($question->id, $currect_option->id);
         }
     }
 

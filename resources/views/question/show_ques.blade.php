@@ -3,8 +3,12 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 @section('content')
     
-<a href="{{route('course.frontend')}}" type="button" class="btn btn-success float-right"><i class="fas fa-plus"></i> See Your Exam List</a>
-
+<div class="container-fluid">
+    <a href="{{route('course.frontend')}}" type="button" class="btn btn-danger float-right"> See Your Exam List</a>
+</div>
+@if ((session('error')))
+<div class="text-danger">{{ session('error') }}</div>
+@endif
     <div class="container-fluid mt-3">
         <h1 class="text-center">Choose the correct answer</h1>
             @foreach ($questions as $key => $item)
@@ -18,7 +22,7 @@
                         <a style="text-align: left" class="mt-1 btn btn-primary"  data-bs-toggle="collapse" data-bs-target="#collapseExample-{{$key}}" aria-expanded="false" aria-controls="collapseExample-{{$key}}">
                             <h5><b>Question-{{$key+1}} :</b> &nbsp; <i>{{ wordwrap($item->ques_name, 20, "\n") }}</i> &nbsp;<i class="fa fa-arrow-down" aria-hidden="true"></i></h5>
                         </a>
-                        <h3>{{ $item->ques_mark }}</h3>
+                        <h3>Marks :- {{ $item->ques_mark }}</h3>
                         @forelse ($item->options_list as $each_option)
                         <div class="mt-2 collapse" id="collapseExample-{{$key}}">
                             <div class="form-check">
@@ -27,7 +31,7 @@
                                     checked
                                 @endif
                                 value="{{ $each_option->id }}">
-                                <label class="form-check-label">A. {{ $each_option->option_name }}</label>
+                                <label class="form-check-label"> {{ $each_option->option_name }}</label>
                             </div>
                         </div>
                         @empty

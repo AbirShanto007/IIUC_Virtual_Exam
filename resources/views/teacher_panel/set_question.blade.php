@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Teaacher Set Question</title>
+  <title>Teacher Set Question</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,6 +13,7 @@
  <!-- Ionicons -->
  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
  <!-- icheck bootstrap -->
+
  <!-- Theme style -->
  <link rel="stylesheet" href="{{ asset("/dist/css/adminlte.min.css") }}">
  <!-- Google Font: Source Sans Pro -->
@@ -28,56 +29,118 @@
  <link rel="stylesheet" href="{{ asset("/plugins/icheck-bootstrap/icheck-bootstrap.min.css") }}">
 </head>
 <body>
+
+
 <!-- Navbaar Start -->
 @include('teacher_panel.nav')
 <!-- Navbar End -->
 
 <!-- Set Date and Time Start -->
-@if ((session('success')))
+{{-- @if ((session('success')))
 {{ session('success') }}
-@endif
+@endif --}}
+{{-- <section>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">IIUC Virtual Quiz</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            
+            <form class="d-flex justify-content-end">
+              
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+</section> --}}
 
 <section>
-    <a href="{{route('teacher.show_exam_list')}}" class="btn btn-danger">View Exam List</a>
-    <hr>
+    <div class="container-fluid mb-4">
+        <a href="{{route('teacher.show_exam_list')}}" class="btn btn-danger">View Exam List</a>
+    </div>
+    @if ((session('success')))
+    <h2>{{ session('success') }}</h2>
+    @endif
+    @if ((session('error')))
+    <h2>{{ session('error') }}</h2>
+    @endif
 </section>
 
 
 <!-- Set Date and Time End -->
-<div class="row">
-    <div class="col-md-12">
-        <form action="{{ route('teacher.exam.time.update',['exam_id'=>$exam_info->id]) }}" method="post">
-            @csrf
-            <div class="row">
-                <div class="col-md-5">
-                    <div class='input-group date' id='datetimepicker1'>
-                        <input placeholder="exam start time" type='text' value="{{isset($exam_info->xm_start_time)? $exam_info->xm_start_time:null}}" name="exam_start_time" class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
+<section>
+        <div class="container">
+            <div class="card">
+              
+                
+                <div class="card-heade text-center bg-success">
+                    <h4>Set or Update Exam Start & End Time</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="{{ route('teacher.exam.time.update',['exam_id'=>$exam_info->id]) }}" method="post">
+                                @csrf
+                                    <div class="col-md-5">
+                                        <div class='input-group date' id='datetimepicker1'>
+                                            <input placeholder="exam start time" type='text' value="{{isset($exam_info->xm_start_time)? $exam_info->xm_start_time:null}}" name="exam_start_time" class="form-control" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class='input-group date' id='datetimepicker2'>
+                                            <input placeholder="exam end time"  type='text' value="{{isset($exam_info->xm_end_time)? $exam_info->xm_end_time:null}}"  name="exam_end_time" class="form-control" />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mx-4 mt-5">
+                                    <input type="submit" class="btn btn-success" value="update">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-5">
-                    <div class='input-group date' id='datetimepicker2'>
-                        <input placeholder="exam end time"  type='text' value="{{isset($exam_info->xm_end_time)? $exam_info->xm_end_time:null}}"  name="exam_end_time" class="form-control" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
+
+                
+            <div class="card">
+                <div class="card-heade text-center bg-success">
+                    <h4>Set Negative Mark</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="{{ route('teacher.exam.negative_mark.update',['exam_id'=>$exam_info->id]) }}" method="post">
+                                @csrf
+                                    <div class="col-md-5">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="negative"><b>Percentage Of Negative Marking :</b></label>
+                                            <input type="number" step="any" id="negative" name="negativeMark" value="{{isset($exam_info->negativeMark)? $exam_info->negativeMark:null}}"  class="form-control" placeholder="Type Your Negative Mark Percentage">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 mx-4 mt-5">
+                                    <input type="submit" class="btn btn-success" value="update">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-         
-            
-          
-            <input type="submit" value="update">
-        </form>
-    </div>
-</div>
+        </div>
+</section>
 <!-- Question List Start -->
 
 <section>
     <div class="container-fluid mt-3">
-        <h1 class="text-center">Choose the correct answer</h1>
+        <h1 class="text-center">Question List</h1>
 
 
         <form action="" method="POST">
@@ -88,8 +151,8 @@
                         @endphp
                         @forelse ($questions as $each_question)
                         <div>
-                        <a style="text-align: left" class="mt-1 btn btn-danger"  data-bs-toggle="collapse" data-bs-target="#collapseExample{{$i}}" aria-expanded="false" aria-controls="collapseExample">
-                            <h5><b>{{ $loop->iteration.". ". $each_question->ques_name."-marks ".$each_question->ques_mark }}</b><i class="fa fa-arrow-down" aria-hidden="true"></i></h5>
+                        <a style="text-align: left" class="mt-1 btn btn-primary text-white"  data-bs-toggle="collapse" data-bs-target="#collapseExample{{$i}}" aria-expanded="false" aria-controls="collapseExample">
+                            <h5><b>{{ $loop->iteration.". ". $each_question->ques_name."                          -marks ".$each_question->ques_mark }}</b><i class="fa fa-arrow-down" aria-hidden="true"></i></h5>
                         </a>
                         <div class="mt-2 collapse" id="collapseExample{{$i}}">
                         @forelse ($each_question->options_list as $each_option)
@@ -108,10 +171,6 @@
                         @empty
                             
                         @endforelse
-                        
-
-                   
-
                     </div>
                 </div>
 
@@ -121,26 +180,10 @@
     </div>
 </section>
 
-<!-- Question List End -->
 
-<!-- View Question list Start -->
-
-<section class="container-fluid">
-    <h1 class="text-center">
-        Question List
-    </h1>
-    <div class="card">
-
-    </div>
-
-</section>
-
-<!-- View Question list End -->
-
-<!-- Create Question Start -->
 <section class="mt-5">
     <div class="container mt-3">
-        <h1 class="text-center">Setup Question for exam - {{$exam_info->xm_name}} | code - {{$exam_info->xm_id}} </h1>
+        <h1 class="text-center">Set Question for exam - {{$exam_info->xm_name}} {{-- | code - {{$exam_info->xm_id}} --}} </h1>
 
 
         <form action="{{ route('teacher.set_exam_question_store',['exam_id'=>$exam_info->id]) }}" method="POST">
@@ -154,10 +197,13 @@
 
                     <div class="mb-3">
                         <h4 class="text-danger"><b>Question-{{ $i }}</b></h4>
-                        <textarea name="question_detail" class="form-control" cols="20" rows="5" placeholder="Write your Question"></textarea>
+                        <textarea name="question_detail" class="form-control" cols="20" required rows="5" placeholder="Write your Question"></textarea>
                             <div class="alert alert-danger mt-2"></div>
                     </div>
-
+                    <div id="details_array">
+                        <div id="parent_fieldset">
+                            <div>
+                    
                     <div class="row mb-3">
                         <label class="col-sm-1 col-form-label"><b>Option-1</b></label>
                         <div class="col-sm-11">
@@ -169,7 +215,7 @@
                                         </div>
                                     </div>
                                     <div class="col-11">
-                                        <input type="text" class="form-control" placeholder="Type Your Option" name="option_1">
+                                        <input type="text" class="form-control" placeholder="Type Your Option" name="options[option_1]">
 
                                     </div>
                                 </div>
@@ -190,7 +236,7 @@
                                         </div>
                                     </div>
                                     <div class="col-11">
-                                <input type="text" class="form-control" placeholder="Type Your Option" name="option_2">
+                                <input type="text" class="form-control" placeholder="Type Your Option" name="options[option_2]">
 
                                     </div>
                                 </div>
@@ -199,7 +245,19 @@
                                 <div class="alert alert-danger"></div>
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    
+                    </div>
+                    </div>
+                    </div>
+                    
+                    <div class="">
+                        <div class="text-right mb-1">
+                            <button title="Add more field" class="add_field_button btn btn-md bg-success">Add More</button>
+                            <div class="clear_fix"></div>
+                        </div>
+                     </div>
+                   
+                    {{-- <div class="row mb-3">
                         <label class="col-sm-1 col-form-label"><b>Option-3</b></label>
                         <div class="col-sm-11">
                             <div class="input-group mb-3">
@@ -218,8 +276,8 @@
                             </div>
                                 <div class="alert alert-danger"></div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
+                    </div> --}}
+                    {{-- <div class="row mb-3">
                         <label class="col-sm-1 col-form-label"><b>Option-4</b></label>
                         <div class="col-sm-11">
                             <div class="input-group mb-3">
@@ -238,7 +296,8 @@
                             </div>
                                 <div class="alert alert-danger"></div>
                         </div>
-                    </div>
+                    </div> --}}
+
                     {{-- <div class="row mb-3">
                         <label class="col-sm-1 col-form-label"><b>Option-3</b></label>
                         <div class="col-sm-11">
@@ -270,9 +329,11 @@
                             <div class="alert alert-danger mt-2"></div>
                     </div>
 
+                  
+
                     
                     <div class="p-3 d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-outline-primary mt-2" type="submit">Submit</button>
+                        <button class="btn btn-success mt-2" type="submit">Submit</button>
                     </div>
 
                 </div>
@@ -306,5 +367,75 @@ $(function() {
     $('#datetimepicker2').datetimepicker();
 });
 </script>
+
+<script>
+
+     var max_fields = 100;
+        var wrapper = $("#details_array");
+        var add_button = $(".add_field_button");
+        var x = 2;
+        $(add_button).click(function (e) {
+            e.preventDefault();
+            if (x < max_fields) {
+                x++;
+                var all_set = document.createElement("div");
+
+                all_set.setAttribute("class","row mb-3");
+                var label = document.createElement("label");
+                label.setAttribute("class","col-sm-1 col-form-label");
+                label.innerHTML = "Option-"+x;
+                var div_11 = document.createElement("div");
+                div_11.setAttribute("class","col-sm-11");
+                var div_input_group = document.createElement("div");
+                div_input_group.setAttribute("class","input-group mb-3");
+                var div_row = document.createElement("div");
+                div_row.setAttribute("class","row");
+                var div_col_1 = document.createElement("div");
+                div_col_1.setAttribute('class', 'col-1');
+                var input = document.createElement("input");
+                input.setAttribute("type", "radio")
+                input.setAttribute("name", "correct_ans");
+                input.setAttribute("value", x);
+                div_col_1.append(input)
+
+                var div_col_11 = document.createElement("div");
+                div_col_11.setAttribute('class', 'col-11');
+                var input_text = document.createElement("input");
+                input_text.setAttribute("type", "text")
+                input_text.setAttribute("name", "options[option_"+x+"]");
+                input_text.setAttribute("class", "form-control");
+                // input_text.setAttribute("value", x);
+                input_text.setAttribute("placeholder", "Type Your Option");
+                div_col_11.append(input_text)
+
+                div_row.append(div_col_1,div_col_11);
+                div_input_group.append(div_row);
+
+                var div_alert = document.createElement("div");
+                div_alert.setAttribute("class","alert alert-danger");
+
+
+                div_11.append(div_input_group,div_alert)
+
+
+
+                
+    
+                all_set.append(label,div_11);
+                var remove_button = '<button class = remove_field style=float:right;margin-bottom:5px;color:white;background:#ff1f6b;cursor:pointer;border:solid #ff1f6b; title="Delete">Remove</button><div style="clear:both;"></div>'
+                $(wrapper).append(all_set,remove_button);
+
+                }
+             
+            });
+    
+        $(wrapper).on("click", ".remove_field", function (e) {
+            e.preventDefault();
+            $(this).prev('div').remove();
+            $(this).remove();
+            x--;
+        });
+    </script>
+    
 </body>
 </html>

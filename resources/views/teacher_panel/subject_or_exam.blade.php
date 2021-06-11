@@ -29,20 +29,25 @@
 <!-- Create Classroom Start -->
 
 {{-- Start view Course List --}}
-<section>
-  <a href="{{route('teacher.show_exam_list')}}" class="btn btn-danger">View Exam list</a>
+<section class="mt-2">
+  <div class="container-fluid">
+    <a href="{{route('teacher.show_exam_list')}}" class="btn btn-danger">View Exam list</a>
+  </div>
 </section>
 {{-- End view Course List --}}
 
 <section>
-  @if ((session('success')))
+  {{-- @if ((session('success')))
       {{ session('success') }}
-  @endif
+  @endif --}}
   <div class="row mt-5">
         <div class="col-md-6 m-auto">
+                    @if ((session('success')))
+                    {{ session('success') }}
+                    @endif
             <div class="card card-success">
                 <div class="card-header">
-                  <h3 class="card-title">Create Class {{ auth('teachers_web')->id() }}</h3>
+                  <h3 class="card-title">Create Exam {{-- {{ auth('teachers_web')->id() }} --}}</h3>
                 </div>
                 <!-- /.card-header -->
                 <!-- form start -->
@@ -50,10 +55,11 @@
                   @csrf
                   <div class="card-body">
                     <div class="form-group">
-                      <label for="subject_name">Exam Name</label>
-                      <input type="text" class="form-control" id="subject_name" name="subject_name" required placeholder="Exam Name">
-                      <input type="text" class="form-control" id="subject_name" name="subject_code" value="E-{{ App\Exam::generateRandomString(8) }}">
-                    <select name="xm_course" class="form-control">
+                      {{-- <label for="subject_name">Exam Name</label> --}}
+                      <input type="text" class="form-control mt-1" id="subject_name" name="subject_name" required placeholder="Exam Name">
+                      {{-- <input type="text" class="form-control mt-1" id="subject_name" name="subject_code" value="E-{{ App\Exam::generateRandomString(8) }}"> --}}
+                      <input type="hidden" class="form-control mt-1" id="subject_name" name="subject_code" value="E-{{ App\Exam::generateRandomString(8) }}">
+                    <select name="xm_course" class="form-control mt-1">
                       <option value="">Select Course</option>
                         @forelse ($all_course as $item)
                             <option value="{{ $item->id }}">{{ $item->course_title." - ".$item->course_code }}</option>

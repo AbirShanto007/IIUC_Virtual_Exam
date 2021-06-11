@@ -30,14 +30,15 @@
 <!-- Create Class Room Start -->
 <section class="mt-5">
     <div class="container-fluid">
-        <div class="card-deck justify-content-end">
-            <a href="{{route('teacher.create_subject_exam')}}" type="button" class="btn btn-success float-right"><i class="fas fa-plus"></i> Create Class Room</a>
+        <div class="card-deck ">
+            {{-- <a href="{{route('teacher.create_subject_exam')}}" type="button" class="btn btn-success float-right"><i class="fas fa-plus"></i> Create Class Room</a> --}}
+            <a href="{{route('teacher.show_exam_list')}}" class="btn btn-danger float-left">View Exam list</a>
         </div>
     </div>     
 </section>
 <!-- Create Class Room End -->
 
-<h2>{{ $exam_row->xm_id }} -- {{ $exam_row->xm_name }}</h2>
+<h2 class="text-center">{{-- {{ $exam_row->xm_id }} --}} -- {{ $exam_row->xm_name }} --</h2>
 <!-- View Class Room Start-->
 <section class="mt-5">
     <div class="container-fluid">
@@ -47,18 +48,39 @@
                   <tr>
                     <th scope="col">SL</th>
                     <th scope="col">Student Name</th>
+                    <th scope="col">Student ID</th>
                     <th scope="col">Course Name</th>
+                    <th scope="col">Exam Total Marks</th>
                     <th scope="col">Marks</th>
+                    <th scope="col">Grade Point</th>
+                    <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                     @foreach ($studentReq as $key=>$item)
+                    @php
+                        $result = App\StudentSubmittedAnswer::result($item->student_id,$item->exam_id)
+                    @endphp
                         <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->student->name}}</td>
+                            <td>{{$item->student->student_id??null}}</td>
                             <td>{{$item->course->course_title}}</td>
                             <td>
-                                {{ App\StudentSubmittedAnswer::result($item->student_id,$item->exam_id) }}
+                                {{( json_decode($result))->total_exam_marks_grand }}
+                            </td>
+                            <td>
+                                {{( json_decode($result))->total_marks }}
+                            </td>
+                            <td>
+                                @php
+                                    $grade_point = isset((json_decode($result))->gradePointInfo->grade_point)?(json_decode($result))->gradePointInfo->grade_point:null;
+                                    $result = isset((json_decode($result))->gradePointInfo->grade)?(json_decode($result))->gradePointInfo->grade:null
+                                    @endphp
+                                {{ $result." / ".$grade_point }}
+                            </td>
+                            <td>
+                                <a href="{{ route('teacher.student_submitted_answer',['std_id'=>$item->student_id,'course_id'=>$item->course->id,'exam_id'=>$item->exam_id]) }}" class="btn btn-success">All Submitted Answer</a>
                             </td>
 
                         </tr>

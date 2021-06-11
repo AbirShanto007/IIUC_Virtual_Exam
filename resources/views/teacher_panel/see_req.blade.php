@@ -30,15 +30,15 @@
 <!-- Create Class Room Start -->
 <section class="mt-5">
     <div class="container-fluid">
-        <div class="card-deck justify-content-end">
-            <a href="{{route('teacher.create_subject_exam')}}" type="button" class="btn btn-success float-right"><i class="fas fa-plus"></i> Create Class Room</a>
+        <div class="card-deck">
+            {{-- <a href="{{route('teacher.create_subject_exam')}}" type="button" class="btn btn-success float-right"><i class="fas fa-plus"></i> Create Class Room</a> --}}
             <a href="{{route('teacher.show_exam_list')}}" class="btn btn-danger">View Exam list</a>
         </div>
     </div>     
 </section>
 <!-- Create Class Room End -->
 
-<h2>{{ $exam_row->xm_id }} -- {{ $exam_row->xm_name }}</h2>
+<h2 class="text-center">{{-- {{ $exam_row->xm_id }} --}} -- {{ $exam_row->xm_name }} --</h2>
 <!-- View Class Room Start-->
 <section class="mt-5">
     <div class="container-fluid">
@@ -48,6 +48,7 @@
                   <tr>
                     <th scope="col">SL</th>
                     <th scope="col">Student Name</th>
+                    <th scope="col">Student ID</th>
                     <th scope="col">Course Name</th>
                     <th class="text-center" colspan="2">Action</th>
                   </tr>
@@ -57,6 +58,7 @@
                         <tr>
                             <td>{{$key+1}}</td>
                             <td>{{$item->student->name}}</td>
+                            <td>{{$item->student->student_id??null}}</td>
                             <td>{{$item->course->course_title}}</td>
                           <td>
 

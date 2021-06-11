@@ -56,8 +56,10 @@ Route::middleware(['teachers_web'])->group(function () {
             Route::post('/status/store', 'ExamController@exam_status')->name('exam_status');
             Route::post('/req_status/store', 'ExamController@req_status')->name('req_status');
             Route::post('/exam/time/{exam_id}/update', 'ExamController@exam_time_update')->name('exam.time.update');
+            Route::post('/exam/negative/mark/{exam_id}/update', 'ExamController@negative_mark_update')->name('exam.negative_mark.update');
             Route::get('/see_request/{teacher_id}/{course_id}/{exam_id}', 'ExamController@see_student_list')->name('see_request');
             Route::get('/approved_student_marks/{teacher_id}/{course_id}/{exam_id}', 'ExamController@approved_student_marks')->name('approved_student_marks');
+            Route::get('/student_submitted_answer/{std_id}/{course_id}/{exam_id}', 'ExamController@student_submitted_answer')->name('student_submitted_answer');
         });
     });
 });
@@ -66,13 +68,44 @@ Route::middleware(['teachers_web'])->group(function () {
 Route::get('/teacher_login', 'Teacher\Auth\LoginController@showLoginForm')->name('teacher.login');
 Route::post('/teacher_login/store', 'Teacher\Auth\LoginController@login')->name('teacher.login.store');
 
+
+// Adminpanel
+
+Route::get('/admin_login', 'Admin_panel\Auth\LoginController@showLoginForm')->name('admin.login');
+Route::post('/admin_login/store', 'Admin_panel\Auth\LoginController@login')->name('admin.login.store');
+
+Route::post('/admin/logout', 'Admin_panel\Auth\LoginController@logout')->name('admin.logout');
+
+Route::middleware(['admins_web'])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::name('admin.')->group(function () {
+
+            Route::get('/index', 'Admin_panel\AdminController@index')->name('index');
+
+
+            Route::get('/courses', 'Admin_panel\AdminController@courses')->name('courses');
+            Route::post('/courses_add', 'Admin_panel\AdminController@courses_add')->name('courses_add');
+            Route::post('/course_del/delete/{id}', 'Admin_panel\AdminController@delete')->name('course_delete');
+
+            Route::get('/grade_point', 'Admin_panel\AdminController@grade_point')->name('grade_point');
+            Route::post('/grade_point_add', 'Admin_panel\AdminController@grade_point_add')->name('grade_point_add');
+            Route::post('/grade_point_del/delete/{id}', 'Admin_panel\AdminController@grade_point_delete')->name('grade_point_delete');
+
+            Route::get('/teacher_list', 'Admin_panel\AdminController@teachers_list')->name('teacher_list');
+            //abir start
+            Route::get('/student_list', 'Admin_panel\AdminController@students_list')->name('student_list');
+            //abir end
+        });
+    });
+});
+
 Route::get('/teacher_register', 'Teacher\Auth\RegisterController@showRegistrationForm')->name('teacher.register');
 Route::post('/teacher_register/store', 'Teacher\Auth\RegisterController@register')->name('teacher.register.store');
 Route::post('/teacher/logout', 'Teacher\Auth\LoginController@logout')->name('teacher.logout');
 
 
 
-
+/* Student/User login */
 Route::get('/', function () {
     return view('auth.login');
 })->middleware('guest');
@@ -83,3 +116,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+//http://poshsquares.com/iiuc-virtual-quiz/public/

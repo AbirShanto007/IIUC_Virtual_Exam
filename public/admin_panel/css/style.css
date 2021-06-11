@@ -1,0 +1,96 @@
+.NavMenuBar {
+    color: #00d897c5 !important;
+    font-size: 24px !important;
+}
+
+.nav-menu-item {
+    text-decoration: none;
+    color: white;
+}
+
+.nav-menu-item:hover {
+    text-decoration: none;
+    color: white;
+    border-left: 5px solid white;
+    transition: 0.1s;
+}
+
+.sideNavOpen {
+    height: 100%;
+    width: 160px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    overflow-x: hidden;
+    padding-left: 10px;
+    padding-top: 20px;
+    transition: 0.1s;
+    background-color: #00d897c5;
+}
+
+.sideNavClose {
+    height: 100%;
+    width: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    overflow-x: hidden;
+    padding-left: 10px;
+    padding-top: 20px;
+    transition: 0.11s;
+    background-color: #00d897c5;
+}
+
+.ContentOverlay {
+    display: block;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    cursor: pointer;
+    z-index: 7;
+    background-color: rgba(224, 255, 245, 0.363);
+}
+
+.ContentOverlayClose {
+    display: none;
+}
+
+.content {
+    margin-left: 120px;
+    z-index: 5;
+    margin-top: 80px;
+}
+
+#index_content {
+    margin-top: 50px;
+}
+
+.card-title {
+    background-color: #00d897c5 !important;
+}
+
+.form-border {
+    border: 1px solid #00d897c5;
+}
+
+
+.login-container {
+    margin-top: 150px;
+    margin-bottom: 150px;
+}
+
+.login-body {
+    border: 2px solid #00d897c5;
+    padding: 25px;
+}
+
+.login-heading {
+    background-color: #00d897c5;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
